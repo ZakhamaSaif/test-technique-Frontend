@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="exo.js"></script>
+  </head>
+
+  <body>
+    <div
+      id="container"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+      "
+    >
+      <div id="title"><h1>Color the islands</h1></div>
+      <div id="colorButtons" style="padding-bottom: 10px">
+        <button id="uncolor" onClick="uncolorMap()">Uncolor</button>
+        <button id="color" onClick="colorMap()">Color</button>
+      </div>
+      <div id="map"></div>
+      <div id="sizeButtons" style="padding-top: 10px">
+        <button id="decrease" onClick="decrease()">Decrease Size</button>
+        <button id="increase" onClick="increase()">Increase Size</button>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script type="text/javascript">
+  var height = 30;
+  var width = 30;
+  var map = undefined;
+  function increase() {
+    if (width > 100 || height > 100) {
+      alert("You cannot increase more");
+      return;
+    }
+    width += 2;
+    height += 1;
+    generateNewMap();
+  }
+  function decrease() {
+    if (width < 5 || height < 5) {
+      alert("You cannot decrease more");
+      return;
+    }
+    width -= 2;
+    height -= 1;
+    generateNewMap();
+  }
+  function generateNewMap() {
+    map = new Map(height, width);
+    displayMap(map.getRawMap());
+  }
+  function colorMap() {
+    displayMap(map.getColoredMap());
+  }
+  function uncolorMap() {
+    displayMap(map.getRawMap());
+  }
+  function displayMap(content) {
+    var display = document.createElement("div");
+    display.style = {
+      height: "600px",
+      width: "600px",
+    };
+    var squareWidth = 600 / width;
+    var squareHeight = 600 / height;
+    for (var i = 0; i < content.length; i++) {
+      var row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.flexDirection = "row";
+      for (var j = 0; j < content[i].length; j++) {
+        var square = document.createElement("div");
+        var color = content[i][j];
+        square.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        square.style.width = `${squareWidth}px`;
+        square.style.height = `${squareHeight}px`;
+        row.appendChild(square);
+      }
+      display.appendChild(row);
+    }
+    var mapNode = document.getElementById("map");
+    var currentChild = mapNode.childNodes[0];
+    if (currentChild) {
+      mapNode.removeChild(currentChild);
+    }
+    mapNode.appendChild(display);
+  }
+  generateNewMap();
+</script>
